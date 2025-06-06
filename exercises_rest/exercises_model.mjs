@@ -1,5 +1,5 @@
 /**
- * Add your first name and last name.
+ * Stephen Zulauf
  */
 import mongoose from "mongoose";
 import "dotenv/config";
@@ -38,7 +38,7 @@ const exerciseSchema = mongoose.Schema({
 /**
  * Compile the model from the schema. This must be done after defining the schema.
  */
-const Exercise = mongoose.model(EXERCISE_CLASS, exerciseSchema);
+const Exercise = mongoose.model(EXERCISE_DB_NAME, exerciseSchema);
 
 /**
  * Create an exercise
@@ -56,4 +56,57 @@ const createExercise = async (name, reps, weight, unit, date) => {
   return exercise.save();
 };
 
-export { connect, createExercise };
+/**
+ * Get exercise(s)
+ * @returns A promise. Resolves to an array of JSON objects that match the filter
+ */
+const getExercises = async (filter) => {
+  const query = Exercise.find(filter);
+  return query.exec();
+};
+
+/**
+ * Get exercise by id
+ * @returns A promise.
+ */
+const getExercisebyID = async (id) => {
+  const query = Exercise.findById(id);
+  return query.exec();
+};
+
+/**
+ * Update exercise by id (non - replacment)
+ * @returns A promise.
+ */
+const updateExercise = async (id, body) => {
+  const query = await Exercise.findById(id).updateOne(body);
+  return query;
+};
+
+/**
+ * Delete all the exercises matching the specified query parameter
+ * @returns A promise.
+ */
+const deleteExercises = async (filter) => {
+  const query = await Exercise.deleteMany(filter);
+  return query;
+};
+
+/**
+ * Delete one exercise by id
+ * @returns A promise.
+ */
+const deleteExercise = async (id) => {
+  const query = await Exercise.deleteOne({ _id: id });
+  return query;
+};
+
+export {
+  connect,
+  createExercise,
+  getExercises,
+  getExercisebyID,
+  updateExercise,
+  deleteExercises,
+  deleteExercise,
+};
